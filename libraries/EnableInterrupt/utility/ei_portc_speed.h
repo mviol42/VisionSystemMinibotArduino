@@ -18,10 +18,10 @@
   if (interruptMask & _BV(5)) INTERRUPT_FLAG_PIN21++;
 #endif
 #if defined INTERRUPT_FLAG_PIN22
-  if (interruptMask & _BV(6)) INTERRUPT_FLAG_PIN22++;
+  if (interruptMask & _BV(5)) INTERRUPT_FLAG_PIN22++;
 #endif
 #if defined INTERRUPT_FLAG_PIN23
-  if (interruptMask & _BV(7)) INTERRUPT_FLAG_PIN23++;
+  if (interruptMask & _BV(5)) INTERRUPT_FLAG_PIN23++;
 #endif
 #endif
 
@@ -44,24 +44,4 @@
 #if defined INTERRUPT_FLAG_PINA5
   if (interruptMask & _BV(5)) INTERRUPT_FLAG_PINA5++;
 #endif
-
-#if defined INTERRUPT_FLAG_PINA0_S32
-  if (interruptMask & _BV(0)) INTERRUPT_FLAG_PINA0_S32++;
-#endif
-#if defined INTERRUPT_FLAG_PINA1_S32
-  if (interruptMask & _BV(1)) INTERRUPT_FLAG_PINA1_S32++;
-#endif
-#if defined INTERRUPT_FLAG_PINA2_S32
-  if (interruptMask & _BV(2)) INTERRUPT_FLAG_PINA2_S32++;
-#endif
-#if defined INTERRUPT_FLAG_PINA3_S32
-  if (interruptMask & _BV(3)) INTERRUPT_FLAG_PINA3_S32++;
-#endif
-#if defined INTERRUPT_FLAG_PINA4_S32
-  if (interruptMask & _BV(4)) INTERRUPT_FLAG_PINA4_S32++;
-#endif
-#if defined INTERRUPT_FLAG_PINA5_S32
-  if (interruptMask & _BV(5)) INTERRUPT_FLAG_PINA5_S32++;
-#endif
-
 #endif

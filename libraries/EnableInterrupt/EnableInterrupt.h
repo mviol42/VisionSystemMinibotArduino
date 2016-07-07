@@ -19,7 +19,6 @@
 // Many definitions in /usr/avr/include/avr/io.h
 
 #ifndef EnableInterrupt_h
-#pragma message("NOTICE: *** EnableInterrupt library PRIOR TO version 0.9.6. This is not a problem. Keep calm, and carry on. ***")
 #define EnableInterrupt_h
 #include <Arduino.h>
 
@@ -110,18 +109,10 @@ void bogusFunctionPlaceholder(void);
 #define detachPinChangeInterrupt(pin)                   disableInterrupt(pin)
 #define attachPinChangeInterrupt(pin,userFunc,mode)     enableInterrupt(pin, userFunc, mode)
 
-#ifdef LIBCALL_ENABLEINTERRUPT // LIBCALL_ENABLEINTERRUPT ****************************************
-
-#ifdef EI_ARDUINO_INTERRUPTED_PIN
-extern volatile uint8_t arduinoInterruptedPin;
-extern volatile uint8_t arduinoPinState;
-#endif
-
-#else
+#ifndef LIBCALL_ENABLEINTERRUPT // LIBCALL_ENABLEINTERRUPT ****************************************
 
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
 volatile uint8_t arduinoInterruptedPin=0;
-volatile uint8_t arduinoPinState=0;
 #endif
 
 
@@ -1285,17 +1276,17 @@ ISR(INT0_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
 #if defined MIGHTY1284
-  arduinoInterruptedPin=ARDUINO_PIN_D2; arduinoPinState=PIND & _BV(2);
+  arduinoInterruptedPin=ARDUINO_PIN_D2;
 #elif defined ARDUINO_MEGA
-  arduinoInterruptedPin=ARDUINO_PIN_D0; arduinoPinState=PIND & _BV(0);
+  arduinoInterruptedPin=ARDUINO_PIN_D0;
 #elif defined ARDUINO_LEONARDO
-  arduinoInterruptedPin=ARDUINO_PIN_D0; arduinoPinState=PIND & _BV(0);
+  arduinoInterruptedPin=ARDUINO_PIN_D0;
 #elif defined ARDUINO_328
-  arduinoInterruptedPin=ARDUINO_PIN_D2; arduinoPinState=PIND & _BV(2);
+  arduinoInterruptedPin=ARDUINO_PIN_D2;
 #elif defined EI_ATTINY24
-  arduinoInterruptedPin=ARDUINO_PIN_B2; arduinoPinState=PINB & _BV(2);
+  arduinoInterruptedPin=ARDUINO_PIN_B2;
 #elif defined EI_ATTINY25
-  arduinoInterruptedPin=ARDUINO_PIN_B0; arduinoPinState=PINB & _BV(0);
+  arduinoInterruptedPin=ARDUINO_PIN_B0;
 #endif
 #endif // EI_ARDUINO_INTERRUPTED_PIN
 #if ! defined EI_ATTINY25 && ! defined EI_ATTINY24
@@ -1305,7 +1296,7 @@ ISR(INT0_vect) {/*{{{*/
 #endif
 #else
 #if defined MIGHTY1284
-  INTERRUPT_FLAG_PIN10++;
+  INTERRUPT_FLAG_PIN10++ 
 #endif
 #if defined ARDUINO_MEGA
 #ifdef INTERRUPT_FLAG_PIN21
@@ -1344,19 +1335,19 @@ ISR(INT1_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
 #if defined MIGHTY1284
-  arduinoInterruptedPin=ARDUINO_PIN_D3; arduinoPinState=PIND & _BV(3);
+  arduinoInterruptedPin=ARDUINO_PIN_D3;
 #elif defined ARDUINO_MEGA
-  arduinoInterruptedPin=ARDUINO_PIN_D1; arduinoPinState=PIND & _BV(1);
+  arduinoInterruptedPin=ARDUINO_PIN_D1;
 #elif defined ARDUINO_LEONARDO
-  arduinoInterruptedPin=ARDUINO_PIN_D1; arduinoPinState=PIND & _BV(1);
+  arduinoInterruptedPin=ARDUINO_PIN_D1;
 #elif defined ARDUINO_328
-  arduinoInterruptedPin=ARDUINO_PIN_D3; arduinoPinState=PIND & _BV(3);
+  arduinoInterruptedPin=ARDUINO_PIN_D3;
 #endif
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[1])();
 #else
 #if defined MIGHTY1284
-  INTERRUPT_FLAG_PIN11++;
+  INTERRUPT_FLAG_PIN11++ 
 #endif
 #if defined ARDUINO_MEGA
 #ifdef INTERRUPT_FLAG_PIN20
@@ -1384,17 +1375,17 @@ ISR(INT2_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
 #if defined MIGHTY1284
-  arduinoInterruptedPin=ARDUINO_PIN_B2; arduinoPinState=PINB & _BV(2);
+  arduinoInterruptedPin=ARDUINO_PIN_B2;
 #elif defined ARDUINO_MEGA
-  arduinoInterruptedPin=ARDUINO_PIN_D2; arduinoPinState=PIND & _BV(2);
+  arduinoInterruptedPin=ARDUINO_PIN_D2;
 #elif defined ARDUINO_LEONARDO
-  arduinoInterruptedPin=ARDUINO_PIN_D2; arduinoPinState=PIND & _BV(2);
+  arduinoInterruptedPin=ARDUINO_PIN_D2;
 #endif
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[2])();
 #else
 #if defined MIGHTY1284
-  INTERRUPT_FLAG_PIN2++;
+  INTERRUPT_FLAG_PIN2++ 
 #endif
 #if defined ARDUINO_MEGA
 #ifdef INTERRUPT_FLAG_PIN19
@@ -1416,9 +1407,9 @@ ISR(INT3_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
 #if defined ARDUINO_MEGA
-  arduinoInterruptedPin=ARDUINO_PIN_D3; arduinoPinState=PIND & _BV(3);
+  arduinoInterruptedPin=ARDUINO_PIN_D3;
 #elif defined ARDUINO_LEONARDO
-  arduinoInterruptedPin=ARDUINO_PIN_D3; arduinoPinState=PIND & _BV(3);
+  arduinoInterruptedPin=ARDUINO_PIN_D3;
 #endif
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[3])();
@@ -1442,7 +1433,7 @@ ISR(INT3_vect) {/*{{{*/
 ISR(INT4_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  arduinoInterruptedPin=ARDUINO_PIN_E4; arduinoPinState=PINE & _BV(4);
+  arduinoInterruptedPin=ARDUINO_PIN_E4;
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[4])();
 #else
@@ -1457,7 +1448,7 @@ ISR(INT4_vect) {/*{{{*/
 ISR(INT5_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  arduinoInterruptedPin=ARDUINO_PIN_E5; arduinoPinState=PINE & _BV(5);
+  arduinoInterruptedPin=ARDUINO_PIN_E5;
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[5])();
 #else
@@ -1472,7 +1463,7 @@ ISR(INT5_vect) {/*{{{*/
 ISR(INT6_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  arduinoInterruptedPin=ARDUINO_PIN_E6; arduinoPinState=PINE & _BV(6);
+  arduinoInterruptedPin=ARDUINO_PIN_E6;
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[6])();
 #else
@@ -1487,7 +1478,7 @@ ISR(INT6_vect) {/*{{{*/
 ISR(INT7_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  arduinoInterruptedPin=ARDUINO_PIN_E7; arduinoPinState=PINE & _BV(7);
+  arduinoInterruptedPin=ARDUINO_PIN_E7;
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[7])();
 #else
@@ -1504,7 +1495,7 @@ ISR(INT7_vect) {/*{{{*/
 ISR(INT6_vect) {/*{{{*/
 #ifndef NEEDFORSPEED
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  arduinoInterruptedPin=ARDUINO_PIN_E6; arduinoPinState=PINE & _BV(6);
+  arduinoInterruptedPin=ARDUINO_PIN_E6;
 #endif // EI_ARDUINO_INTERRUPTED_PIN
   (*functionPointerArrayEXTERNAL[4])();
 #else
@@ -1548,14 +1539,14 @@ ISR(PORTA_VECT) {/*{{{*/
 #else
   if (interruptMask == 0) goto exitPORTAISR; // get out quickly if not interested.
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_A0; arduinoPinState=current & _BV(0); portAFunctions.pinZero(); }
-  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_A1; arduinoPinState=current & _BV(1); portAFunctions.pinOne(); }
-  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_A2; arduinoPinState=current & _BV(2); portAFunctions.pinTwo(); }
-  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_A3; arduinoPinState=current & _BV(3); portAFunctions.pinThree(); }
-  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_A4; arduinoPinState=current & _BV(4); portAFunctions.pinFour(); }
-  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_A5; arduinoPinState=current & _BV(5); portAFunctions.pinFive(); }
-  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_A6; arduinoPinState=current & _BV(6); portAFunctions.pinSix(); }
-  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_A7; arduinoPinState=current & _BV(7); portAFunctions.pinSeven(); }
+  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_A0; portAFunctions.pinZero(); }
+  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_A1; portAFunctions.pinOne(); }
+  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_A2; portAFunctions.pinTwo(); }
+  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_A3; portAFunctions.pinThree(); }
+  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_A4; portAFunctions.pinFour(); }
+  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_A5; portAFunctions.pinFive(); }
+  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_A6; portAFunctions.pinSix(); }
+  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_A7; portAFunctions.pinSeven(); }
 #else
   if (interruptMask & _BV(0)) portAFunctions.pinZero();
   if (interruptMask & _BV(1)) portAFunctions.pinOne();
@@ -1590,7 +1581,7 @@ ISR(PORTB_VECT) {/*{{{*/
   interruptMask = fallingPinsPORTB & ~current;
   interruptMask = interruptMask | tmp;
   interruptMask = changedPins & interruptMask;
-#if (defined MIGHTY1284) || (defined EI_ATTINY24)
+#ifdef MIGHTY1284
   interruptMask = PCMSK1 & interruptMask;
 #else
 #ifdef EI_ATTINY25
@@ -1606,17 +1597,17 @@ ISR(PORTB_VECT) {/*{{{*/
 #else
   if (interruptMask == 0) goto exitPORTBISR; // get out quickly if not interested.
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_B0; arduinoPinState=current & _BV(0); portBFunctions.pinZero(); }
-  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_B1; arduinoPinState=current & _BV(1); portBFunctions.pinOne(); }
-  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_B2; arduinoPinState=current & _BV(2); portBFunctions.pinTwo(); }
-  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_B3; arduinoPinState=current & _BV(3); portBFunctions.pinThree(); }
+  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_B0; portBFunctions.pinZero(); }
+  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_B1; portBFunctions.pinOne(); }
+  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_B2; portBFunctions.pinTwo(); }
+  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_B3; portBFunctions.pinThree(); }
 #if ! (defined EI_ATTINY24)
-  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_B4; arduinoPinState=current & _BV(4); portBFunctions.pinFour(); }
-  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_B5; arduinoPinState=current & _BV(5); portBFunctions.pinFive(); }
+  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_B4; portBFunctions.pinFour(); }
+  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_B5; portBFunctions.pinFive(); }
 #endif
 #if ! (defined ARDUINO_328) && ! (defined EI_ATTINY24) && ! (defined EI_ATTINY25)
-  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_B6; arduinoPinState=current & _BV(6); portBFunctions.pinSix(); }
-  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_B7; arduinoPinState=current & _BV(7); portBFunctions.pinSeven(); }
+  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_B6; portBFunctions.pinSix(); }
+  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_B7; portBFunctions.pinSeven(); }
 #endif
 #else // EI_ARDUINO_INTERRUPTED_PIN
   if (interruptMask & _BV(0)) portBFunctions.pinZero();
@@ -1656,11 +1647,7 @@ ISR(PORTC_VECT) {/*{{{*/
   interruptMask = fallingPinsPORTC & ~current;
   interruptMask = interruptMask | tmp;
   interruptMask = changedPins & interruptMask;
-#if (defined MIGHTY1284)
-  interruptMask = PCMSK2 & interruptMask;
-#else
   interruptMask = PCMSK1 & interruptMask;
-#endif
 
   portSnapshotC = current;
 #ifdef NEEDFORSPEED
@@ -1668,15 +1655,15 @@ ISR(PORTC_VECT) {/*{{{*/
 #else
   if (interruptMask == 0) goto exitPORTCISR; // get out quickly if not interested.
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_C0; arduinoPinState=current & _BV(0); portCFunctions.pinZero(); }
-  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_C1; arduinoPinState=current & _BV(1); portCFunctions.pinOne(); }
-  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_C2; arduinoPinState=current & _BV(2); portCFunctions.pinTwo(); }
-  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_C3; arduinoPinState=current & _BV(3); portCFunctions.pinThree(); }
-  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_C4; arduinoPinState=current & _BV(4); portCFunctions.pinFour(); }
-  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_C5; arduinoPinState=current & _BV(5); portCFunctions.pinFive(); }
+  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_C0; portCFunctions.pinZero(); }
+  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_C1; portCFunctions.pinOne(); }
+  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_C2; portCFunctions.pinTwo(); }
+  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_C3; portCFunctions.pinThree(); }
+  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_C4; portCFunctions.pinFour(); }
+  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_C5; portCFunctions.pinFive(); }
 #ifdef MIGHTY1284
-  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_C6; arduinoPinState=current & _BV(6); portCFunctions.pinSix(); }
-  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_C7; arduinoPinState=current & _BV(7); portCFunctions.pinSeven(); }
+  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_C6; portCFunctions.pinSix(); }
+  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_C7; portCFunctions.pinSeven(); }
 #endif
 #else
   if (interruptMask & _BV(0)) portCFunctions.pinZero();
@@ -1712,11 +1699,8 @@ ISR(PORTD_VECT) {/*{{{*/
   interruptMask = fallingPinsPORTD & ~current;
   interruptMask = interruptMask | tmp;
   interruptMask = changedPins & interruptMask;
-#if (defined MIGHTY1284)
-  interruptMask = PCMSK3 & interruptMask;
-#else
   interruptMask = PCMSK2 & interruptMask;
-#endif
+
 
   portSnapshotD = current;
 #ifdef NEEDFORSPEED
@@ -1724,14 +1708,14 @@ ISR(PORTD_VECT) {/*{{{*/
 #else
   if (interruptMask == 0) goto exitPORTDISR; // get out quickly if not interested.
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_D0; arduinoPinState=current & _BV(0); portDFunctions.pinZero(); }
-  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_D1; arduinoPinState=current & _BV(1); portDFunctions.pinOne(); }
-  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_D2; arduinoPinState=current & _BV(2); portDFunctions.pinTwo(); }
-  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_D3; arduinoPinState=current & _BV(3); portDFunctions.pinThree(); }
-  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_D4; arduinoPinState=current & _BV(4); portDFunctions.pinFour(); }
-  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_D5; arduinoPinState=current & _BV(5); portDFunctions.pinFive(); }
-  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_D6; arduinoPinState=current & _BV(6); portDFunctions.pinSix(); }
-  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_D7; arduinoPinState=current & _BV(7); portDFunctions.pinSeven(); }
+  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_D0; portDFunctions.pinZero(); }
+  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_D1; portDFunctions.pinOne(); }
+  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_D2; portDFunctions.pinTwo(); }
+  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_D3; portDFunctions.pinThree(); }
+  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_D4; portDFunctions.pinFour(); }
+  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_D5; portDFunctions.pinFive(); }
+  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_D6; portDFunctions.pinSix(); }
+  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_D7; portDFunctions.pinSeven(); }
 #else
   if (interruptMask & _BV(0)) portDFunctions.pinZero();
   if (interruptMask & _BV(1)) portDFunctions.pinOne();
@@ -1772,13 +1756,13 @@ ISR(PORTJ_VECT) {/*{{{*/
 #else
   if (interruptMask == 0) goto exitPORTJISR; // get out quickly if not interested.
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_J0; arduinoPinState=current & _BV(0); portJFunctions.pinZero(); }
-  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_J1; arduinoPinState=current & _BV(1); portJFunctions.pinOne(); }
-  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_J2; arduinoPinState=current & _BV(2); portJFunctions.pinTwo(); }
-  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_J3; arduinoPinState=current & _BV(3); portJFunctions.pinThree(); }
-  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_J4; arduinoPinState=current & _BV(4); portJFunctions.pinFour(); }
-  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_J5; arduinoPinState=current & _BV(5); portJFunctions.pinFive(); }
-  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_J6; arduinoPinState=current & _BV(6); portJFunctions.pinSix(); }
+  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_J0; portJFunctions.pinZero(); }
+  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_J1; portJFunctions.pinOne(); }
+  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_J2; portJFunctions.pinTwo(); }
+  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_J3; portJFunctions.pinThree(); }
+  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_J4; portJFunctions.pinFour(); }
+  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_J5; portJFunctions.pinFive(); }
+  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_J6; portJFunctions.pinSix(); }
 #else
   if (interruptMask & _BV(0)) portJFunctions.pinZero();
   if (interruptMask & _BV(1)) portJFunctions.pinOne();
@@ -1818,14 +1802,14 @@ ISR(PORTK_VECT) {/*{{{*/
 #else
   if (interruptMask == 0) goto exitPORTKISR; // get out quickly if not interested.
 #ifdef EI_ARDUINO_INTERRUPTED_PIN
-  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_K0; arduinoPinState=current & _BV(0); portKFunctions.pinZero(); }
-  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_K1; arduinoPinState=current & _BV(1); portKFunctions.pinOne(); }
-  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_K2; arduinoPinState=current & _BV(2); portKFunctions.pinTwo(); }
-  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_K3; arduinoPinState=current & _BV(3); portKFunctions.pinThree(); }
-  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_K4; arduinoPinState=current & _BV(4); portKFunctions.pinFour(); }
-  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_K5; arduinoPinState=current & _BV(5); portKFunctions.pinFive(); }
-  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_K6; arduinoPinState=current & _BV(6); portKFunctions.pinSix(); }
-  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_K7; arduinoPinState=current & _BV(7); portKFunctions.pinSeven(); }
+  if (interruptMask & _BV(0)) { arduinoInterruptedPin=ARDUINO_PIN_K0; portKFunctions.pinZero(); }
+  if (interruptMask & _BV(1)) { arduinoInterruptedPin=ARDUINO_PIN_K1; portKFunctions.pinOne(); }
+  if (interruptMask & _BV(2)) { arduinoInterruptedPin=ARDUINO_PIN_K2; portKFunctions.pinTwo(); }
+  if (interruptMask & _BV(3)) { arduinoInterruptedPin=ARDUINO_PIN_K3; portKFunctions.pinThree(); }
+  if (interruptMask & _BV(4)) { arduinoInterruptedPin=ARDUINO_PIN_K4; portKFunctions.pinFour(); }
+  if (interruptMask & _BV(5)) { arduinoInterruptedPin=ARDUINO_PIN_K5; portKFunctions.pinFive(); }
+  if (interruptMask & _BV(6)) { arduinoInterruptedPin=ARDUINO_PIN_K6; portKFunctions.pinSix(); }
+  if (interruptMask & _BV(7)) { arduinoInterruptedPin=ARDUINO_PIN_K7; portKFunctions.pinSeven(); }
 #else
   if (interruptMask & _BV(0)) portKFunctions.pinZero();
   if (interruptMask & _BV(1)) portKFunctions.pinOne();
@@ -1844,6 +1828,10 @@ ISR(PORTK_VECT) {/*{{{*/
 // *************************************************************************************
 // *************************************************************************************
 
+#else
+#ifdef EI_ARDUINO_INTERRUPTED_PIN
+extern volatile uint8_t arduinoInterruptedPin;
+#endif
 #endif // #ifndef LIBCALL_ENABLEINTERRUPT *********************************************************
 #endif // #if defined __SAM3U4E__ || defined __SAM3X8E__ || defined __SAM3X8H__
 #endif // #ifndef EnableInterrupt_h ***************************************************************
