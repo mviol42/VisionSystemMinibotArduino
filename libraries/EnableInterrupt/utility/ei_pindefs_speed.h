@@ -78,6 +78,7 @@ volatile uint8_t INTERRUPT_FLAG_PINA4 = 0;
 #ifdef INTERRUPT_FLAG_PINA5
 volatile uint8_t INTERRUPT_FLAG_PINA5 = 0;
 #endif
+
 #ifdef INTERRUPT_FLAG_PINA8
 volatile uint8_t INTERRUPT_FLAG_PINA8 = 0;
 #endif
@@ -134,4 +135,23 @@ volatile uint8_t INTERRUPT_FLAG_PIN75 = 0;
 #endif
 #ifdef INTERRUPT_FLAG_PIN76
 volatile uint8_t INTERRUPT_FLAG_PIN76 = 0;
+#endif
+
+#ifdef INTERRUPT_FLAG_PINA0_S32
+volatile int32_t INTERRUPT_FLAG_PINA0_S32 = 0;
+#endif
+#ifdef INTERRUPT_FLAG_PINA1_S32
+volatile int32_t INTERRUPT_FLAG_PINA1_S32 = 0;
+#endif
+#ifdef INTERRUPT_FLAG_PINA2_S32
+volatile int32_t INTERRUPT_FLAG_PINA2_S32 = 0;
+#endif
+#ifdef INTERRUPT_FLAG_PINA3_S32
+volatile int32_t INTERRUPT_FLAG_PINA3_S32 = 0;
+#endif
+#ifdef INTERRUPT_FLAG_PINA4_S32
+volatile int32_t INTERRUPT_FLAG_PINA4_S32 = 0;
+#endif
+#ifdef INTERRUPT_FLAG_PINA5_S32
+volatile int32_t INTERRUPT_FLAG_PINA5_S32 = 0;
 #endif
