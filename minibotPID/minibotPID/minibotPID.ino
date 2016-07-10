@@ -17,11 +17,9 @@ int encoderPinB = A4;
 int LEDPin = 10;
 int minibotVelPin = A0;
 
-//Time
-int delayTime = 500;
-long newtime;
-long oldtime = 0;
-long printTime = 0;
+//print loop, number of cycles between prints
+int printTime = 0;
+int printNow = 100;
 
 //Variables for calculations
 double turnRate = 0;
@@ -29,7 +27,6 @@ double aSA = 0;
 double aSB = 0;
 double pidaSA = 0;
 double pidaSB = 0;
-double minibotMaxVelMm = 600.0; // max vel in mm/sec
 int desiredAxleSpeedA = 10;
 int desiredAxleSpeedB = 10;
 int desiredMinibotVel = 10;
@@ -37,22 +34,25 @@ double errorA = 0;
 double errorB = 0;
 int convertMStoS = 1000;
 
-double EPS = 5.0;
-double kP = 2.5;
 
 //physical characteristics
+double minibotMaxVelMm = 30000.0; // max vel in mm/sec
 double wheelBase = 140;
 double wheelRadius = 31;
 
-//interupt things
+// pid timing loop
+double EPS = 5.0;
 long now = 0;
 long nextTime = 0;
+long lastTime = 0;
+int deltaTime = 50;
 
-int deltaTime = 500;
-volatile int lastCountA = 0;
-volatile int lastCountB = 0;
-volatile double actualVelA = 0;
-volatile double actualVelB = 0;
+double kP = 2.5;
+
+long lastCountA = 0;
+long lastCountB = 0;
+double actualVelA = 0;
+double actualVelB = 0;
 
 void setup ()
 {
@@ -68,88 +68,99 @@ void setup ()
   enableInterruptFast(encoderPinA, CHANGE);
   enableInterruptFast(encoderPinB, CHANGE);
   Serial.println("now, v, lca, a, aSA, dSA, ea, pa, ma");
+
 }
 
 
 
 void loop () {
-  // VAlue between 0..1023, map onto 0..MaxVelocity in mm/sec
-  int minibotVelInput = analogRead(minibotVelPin);
-  desiredMinibotVel = minibotVelInput * minibotMaxVelMm / 1023;
-  
-  // in wheel shaft rotation speed rad/sec
-  double dSA = calculateAxleSpeedA(desiredMinibotVel, turnRate);
-  double dSB = calculateAxleSpeedB(desiredMinibotVel, turnRate);
-
-  int32_t currentCountA = countA;
-  int32_t currentCountB = countB;
-
-  //Calculate axle speeds from encoder
   now = millis();
   if(nextTime - now <= 0) {
-    // compute delta ticks for A
+
+    // VAlue between 0..1023, map onto 0..MaxVelocity in mm/sec
+    int minibotVelInput = analogRead(minibotVelPin);
+    desiredMinibotVel = minibotVelInput * minibotMaxVelMm / 1023;
+  
+    // in wheel shaft rotation speed rad/sec
+    double dSA = calculateAxleSpeedA(desiredMinibotVel, turnRate);
+    double dSB = calculateAxleSpeedB(desiredMinibotVel, turnRate);
+
+    long currentCountA = countA;
+    long currentCountB = countB;
+
+   
+    //Calculate axle speeds from encoder
+    // compute delta ticks 
+    int deltaTickA = currentCountA - lastCountA;
+    int deltaTickB = currentCountB - lastCountB;
+    long elapsedTime = now - lastTime;
     aSA = (currentCountA - lastCountA) * convertMStoS / (deltaTime);
     aSB = (currentCountB - lastCountB) * convertMStoS / (deltaTime);
-    lastCountA = currentCountA;
-    lastCountB = currentCountB;
-    nextTime = now + deltaTime;
-  }
 
     double errorA = dSA - aSA;
     double errorB = dSB - aSB;
 
+    // map onto 0 to 255, see constrain function
+    pidaSA = pidaSA + kP * errorA;
+    int motorA = constrain(pidaSA, 0, 255);
+    pidaSB = pidaSB + kP * errorB;
+    int motorB = constrain(pidaSB, 0, 255);
+    analogWrite(pinPWMA, motorA);
+    analogWrite(pinPWMB, motorB);
+    digitalWrite(pinDirectionA, HIGH);
+    digitalWrite(pinDirectionB, HIGH);
 
-  // map onto 0 to 255, see constrain function
-  pidaSA = pidaSA + kP * errorA;
-  int motorA = constrain(pidaSA, 0, 255);
-  pidaSA = pidaSB + kP * errorB;
-  int motorB = constrain(pidaSA, 0, 255);
-  analogWrite(pinPWMA, motorA);
-  analogWrite(pinPWMB, motorB);
-  digitalWrite(pinDirectionA, HIGH);
-  digitalWrite(pinDirectionB, HIGH);
-
-
-  if (printTime < now) {
-    printTime = now + 1000;
-    // output more data?  which parameters are we interested in?
-    Serial.print(now);
-    Serial.print(", ");Serial.print(desiredMinibotVel);
-
-    //a
-    Serial.print(", ");Serial.print(lastCountA);
-    Serial.print(", ");Serial.print(currentCountA);
-    Serial.print(", ");Serial.print(aSA);
-    Serial.print(", ");Serial.print(dSA);
-    Serial.print(", ");Serial.print(errorA);
-    Serial.print(", ");Serial.print(pidaSA);
-    Serial.print(", ");Serial.print(motorA);
+    if(abs(kP * errorA) < EPS && abs(kP * errorB) < EPS){
+        digitalWrite(LEDPin, HIGH);
+    } else {
+        digitalWrite(LEDPin, LOW);
+    }
 
 
-    //b
-//    Serial.print(", lcB=");Serial.print(lastCountB);
-//    Serial.print(", aSB=");Serial.print(aSB);
-//    Serial.print(", dSB=");Serial.print(dSB);
-//    Serial.print(", b=");Serial.print(currentCountB);
-//    Serial.print(", nta=");Serial.print(nextTime);
-//    Serial.print(", pb=");Serial.print(pidaSB);
-//    Serial.print(", mb=");Serial.print(motorB);
-//    Serial.print(", eb=");Serial.print(errorB);
-    Serial.println("");
+
+   if (printTime == printNow) {
+      // output more data?  which parameters are we interested in?
+      Serial.print(now);
+      Serial.print(", ");Serial.print(elapsedTime);
+      Serial.print(", ");Serial.print(desiredMinibotVel);
+
+      //a
+      Serial.print(", ");Serial.print(aSA);
+      Serial.print(", ");Serial.print(dSA);
+      Serial.print(", ");Serial.print(deltaTickA);
+      Serial.print(", ");Serial.print(errorA);
+      Serial.print(", ");Serial.print(pidaSA);
+      Serial.print(", ");Serial.print(motorA);
+
+
+      //b
+      Serial.print(", ");Serial.print(aSB);
+      Serial.print(", ");Serial.print(dSB);
+      Serial.print(", ");Serial.print(deltaTickB);
+      Serial.print(", ");Serial.print(errorB);
+      Serial.print(", ");Serial.print(pidaSB);
+      Serial.print(", ");Serial.print(motorB);
+      Serial.println("");
+      printTime = 0;
+
+    }
+
+    lastCountA = currentCountA;
+    lastCountB = currentCountB;
+    nextTime = now + deltaTime;
+    lastTime = now;
+    printTime++;
   }
   
-  if(abs(kP * errorA) < EPS && abs(kP * errorB) < EPS){
-      digitalWrite(LEDPin, HIGH);
-  } else {
-      digitalWrite(LEDPin, LOW);
-  }
 }
 
 double calculateAxleSpeedA (double dVel, double tRate){
-  return (2 * dVel + wheelBase * tRate) / (2 * wheelRadius);
+//  return (2 * dVel + wheelBase * tRate) / (2 * wheelRadius);
+  return (dVel ) / (2 * 3.14159 *  wheelRadius);
 }
 
 double calculateAxleSpeedB (double dVel, double tRate){
-  return (2 * dVel - wheelBase * tRate) / (2 * wheelRadius);
+//  return (2 * dVel - wheelBase * tRate) / (2 * wheelRadius);
+  return (dVel ) / (2 * 3.14159 *  wheelRadius);
 }
 

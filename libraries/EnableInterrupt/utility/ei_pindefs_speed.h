@@ -138,20 +138,20 @@ volatile uint8_t INTERRUPT_FLAG_PIN76 = 0;
 #endif
 
 #ifdef INTERRUPT_FLAG_PINA0_S32
-volatile int32_t INTERRUPT_FLAG_PINA0_S32 = 0;
+volatile long INTERRUPT_FLAG_PINA0_S32 = 0;
 #endif
 #ifdef INTERRUPT_FLAG_PINA1_S32
-volatile int32_t INTERRUPT_FLAG_PINA1_S32 = 0;
+volatile long INTERRUPT_FLAG_PINA1_S32 = 0;
 #endif
 #ifdef INTERRUPT_FLAG_PINA2_S32
-volatile int32_t INTERRUPT_FLAG_PINA2_S32 = 0;
+volatile long INTERRUPT_FLAG_PINA2_S32 = 0;
 #endif
 #ifdef INTERRUPT_FLAG_PINA3_S32
-volatile int32_t INTERRUPT_FLAG_PINA3_S32 = 0;
+volatile long INTERRUPT_FLAG_PINA3_S32 = 0;
 #endif
 #ifdef INTERRUPT_FLAG_PINA4_S32
-volatile int32_t INTERRUPT_FLAG_PINA4_S32 = 0;
+volatile long INTERRUPT_FLAG_PINA4_S32 = 0;
 #endif
 #ifdef INTERRUPT_FLAG_PINA5_S32
-volatile int32_t INTERRUPT_FLAG_PINA5_S32 = 0;
+volatile long INTERRUPT_FLAG_PINA5_S32 = 0;
 #endif
