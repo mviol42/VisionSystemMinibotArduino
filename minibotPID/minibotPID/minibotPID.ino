@@ -27,6 +27,7 @@ double turnRate = 0;
 double aSA = 0;
 double aSB = 0;
 // use fadeAsA to calculate errorA = fadeAsA - dSA
+boolean useFade = true;
 double fadeAsA = 0;
 double fadeAsB = 0;
 double fade = 0.5;  // fadeAsA =  fade * aSA + (1 - fade) * fadeAsA
@@ -53,7 +54,9 @@ long nextTime = 0;
 long lastTime = 0;
 int deltaTime = 50;
 
-double kP = 2.5;
+// best
+double kP = 1.0;
+// 2.5 is too big, chatters.
 
 long lastCountA = 0;
 long lastCountB = 0;
@@ -101,8 +104,14 @@ void loop () {
     long elapsedTime = now - lastTime;
     aSA = (currentCountA - lastCountA) * convertMStoS / (deltaTime);
     aSB = (currentCountB - lastCountB) * convertMStoS / (deltaTime);
-    fadeAsA =  fade * aSA + (1 - fade) * fadeAsA;
-    fadeAsB =  fade * aSB + (1 - fade) * fadeAsB;
+
+    if (useFade) {
+      fadeAsA =  fade * aSA + (1 - fade) * fadeAsA;
+      fadeAsB =  fade * aSB + (1 - fade) * fadeAsB;     
+    } else {
+      fadeAsA =  aSA;
+      fadeAsB =  aSB;
+    }
     double errorA = dSA - fadeAsA;
     double errorB = dSB - fadeAsB;
 
