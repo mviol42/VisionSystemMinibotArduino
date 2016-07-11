@@ -41,7 +41,7 @@ double wheelBase = 140;
 double wheelRadius = 31;
 
 // pid timing loop
-double EPS = 5.0;
+double EPS = 15.0;
 long now = 0;
 long nextTime = 0;
 long lastTime = 0;
@@ -67,7 +67,6 @@ void setup ()
   pinMode(minibotVelPin, INPUT);
   enableInterruptFast(encoderPinA, CHANGE);
   enableInterruptFast(encoderPinB, CHANGE);
-  Serial.println("now, v, lca, a, aSA, dSA, ea, pa, ma");
 
 }
 
@@ -117,9 +116,13 @@ void loop () {
     }
 
 
-
+   boolean headerPrinted = false;
    if (printTime == printNow) {
       // output more data?  which parameters are we interested in?
+      if (!headerPrinted) {
+        Serial.println("now, et, v, asa, dsa, dta, ea, pa, ma, asb, dsb, dtb, eb, pb, mb");
+        headerPrinted = true;
+      }
       Serial.print(now);
       Serial.print(", ");Serial.print(elapsedTime);
       Serial.print(", ");Serial.print(desiredMinibotVel);
