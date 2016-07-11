@@ -20,11 +20,17 @@ int minibotVelPin = A0;
 //print loop, number of cycles between prints
 int printTime = 0;
 int printNow = 100;
+boolean headerPrinted = false;
 
 //Variables for calculations
 double turnRate = 0;
 double aSA = 0;
 double aSB = 0;
+// use fadeAsA to calculate errorA = fadeAsA - dSA
+double fadeAsA = 0;
+double fadeAsB = 0;
+double fade = 0.5;  // fadeAsA =  fade * aSA + (1 - fade) * fadeAsA
+
 double pidaSA = 0;
 double pidaSB = 0;
 int desiredAxleSpeedA = 10;
@@ -64,7 +70,7 @@ void setup ()
   pinMode(LEDPin, OUTPUT);
   pinMode(encoderPinA, INPUT);
   pinMode(encoderPinB, INPUT);
-  pinMode(minibotVelPin, INPUT);
+   pinMode(minibotVelPin, INPUT);
   enableInterruptFast(encoderPinA, CHANGE);
   enableInterruptFast(encoderPinB, CHANGE);
 
@@ -95,9 +101,10 @@ void loop () {
     long elapsedTime = now - lastTime;
     aSA = (currentCountA - lastCountA) * convertMStoS / (deltaTime);
     aSB = (currentCountB - lastCountB) * convertMStoS / (deltaTime);
-
-    double errorA = dSA - aSA;
-    double errorB = dSB - aSB;
+    fadeAsA =  fade * aSA + (1 - fade) * fadeAsA;
+    fadeAsB =  fade * aSB + (1 - fade) * fadeAsB;
+    double errorA = dSA - fadeAsA;
+    double errorB = dSB - fadeAsB;
 
     // map onto 0 to 255, see constrain function
     pidaSA = pidaSA + kP * errorA;
@@ -115,12 +122,9 @@ void loop () {
         digitalWrite(LEDPin, LOW);
     }
 
-
-   boolean headerPrinted = false;
    if (printTime == printNow) {
-      // output more data?  which parameters are we interested in?
       if (!headerPrinted) {
-        Serial.println("now, et, v, asa, dsa, dta, ea, pa, ma, asb, dsb, dtb, eb, pb, mb");
+        Serial.println("now, et, v, asa, fsa, dsa, dta, ea, pa, ma, asb, fsb, dsb, dtb, eb, pb, mb");
         headerPrinted = true;
       }
       Serial.print(now);
@@ -129,21 +133,22 @@ void loop () {
 
       //a
       Serial.print(", ");Serial.print(aSA);
+      Serial.print(", ");Serial.print(fadeAsA);
       Serial.print(", ");Serial.print(dSA);
       Serial.print(", ");Serial.print(deltaTickA);
       Serial.print(", ");Serial.print(errorA);
       Serial.print(", ");Serial.print(pidaSA);
       Serial.print(", ");Serial.print(motorA);
 
-
       //b
       Serial.print(", ");Serial.print(aSB);
+      Serial.print(", ");Serial.print(fadeAsB);
       Serial.print(", ");Serial.print(dSB);
       Serial.print(", ");Serial.print(deltaTickB);
       Serial.print(", ");Serial.print(errorB);
       Serial.print(", ");Serial.print(pidaSB);
       Serial.print(", ");Serial.print(motorB);
-      Serial.println("");
+      Serial.println("");   
       printTime = 0;
 
     }
